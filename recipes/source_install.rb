@@ -5,10 +5,25 @@ node.set[:build_essential][:compiletime] = true
 include_recipe 'build-essential'
 
 # We want pg_config binary available at compile time
-p = package 'libpq-dev' do
-  action :nothing
+
+if node['postgresql']['version'] == '9.4'
+  package "libpq5" do
+    action :remove
+    version "9.3.5-1.pgdg12.4+1"
+    ignore_failure true
+  end
+  package "libpq5" do
+    version "9.4~rc1-1.pgdg12.4+1"
+  end
+  package "libpq-dev" do
+    version "9.4~rc1-1.pgdg12.4+1"
+  end
+else
+  p = package 'libpq-dev' do
+    action :nothing
+  end
+  p.run_action(:install)
 end
-p.run_action(:install)
 
 node.default[:repmgr][:pg_bin_dir] = %x{pg_config --bindir}.strip
 
@@ -16,8 +31,8 @@ node.default[:repmgr][:pg_bin_dir] = %x{pg_config --bindir}.strip
   package pkg
 end
 
-if node[:postgresql][:version] == '9.3'
-  node.default[:repmgr][:enable_github_build] = false
+if node['postgresql']['version'] >= '9.3'
+  node.default['repmgr']['enable_github_build'] = false
 end
 
 if(node[:repmgr][:enable_github_build])
@@ -49,7 +64,7 @@ execute "unpack #{File.basename(r_local)}" do
   creates r_path
 end
 
-if node[:postgresql][:version] == '9.2'
+if node['postgresql']['version'] == '9.2'
   %w(repmgr.h check_dir.c).each do |c_file|
     cookbook_file File.join(r_path, c_file) do
       action :create

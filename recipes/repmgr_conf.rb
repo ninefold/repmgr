@@ -22,7 +22,7 @@ node.default[:repmgr][:config][:follow_command] = "repmgr standby follow -f #{no
 node.default[:repmgr][:config][:loglevel] = 'NOTICE'
 node.default[:repmgr][:config][:logfacility] = 'STDERR'
 
-# Adding pg_bindir configuration parameter for 9.3
-if node['postgresql']['version'] == '9.3'
-	node.default[:repmgr][:config][:pg_bindir] = "#{node[:repmgr][:pg_bin_dir]}"	
+# Adding pg_bindir configuration parameter for 9.3 & 9.4
+if node['postgresql']['version'] >= '9.3'
+	node.default['repmgr']['config']['pg_bindir'] = "#{node['repmgr']['pg_bin_dir']}"	
 end
