@@ -94,12 +94,6 @@ else
       retry_delay 20
     end
 
-    # service 'postgresql-repmgr-starter' do
-    #   service_name 'postgresql'
-    #   action :start
-    #   retries 2
-    # end
-
     execute "start newer pg" do
       command "/etc/init.d/postgresql start #{node[:postgresql][:version]}"
       action :run
