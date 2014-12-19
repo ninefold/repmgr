@@ -42,8 +42,8 @@ else
 end
 
 r_local = File.join(node[:repmgr][:build_dir], file_name.gsub('/', '-'))
-r_path  = r_local.sub('.tar.gz', '')    
-    
+r_path = r_local.sub('.tar.gz', '')
+
 directory node[:repmgr][:build_dir]
 
     remote_file r_local do
@@ -69,7 +69,6 @@ if node['postgresql']['version'] == '9.2'
     end
   end
 end
-
 
 execute "configure repmgr v#{node[:repmgr][:version]}" do
   command "make USE_PGXS=1 install"
