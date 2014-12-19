@@ -8,15 +8,13 @@ include_recipe 'build-essential'
 
 if node['postgresql']['version'] == '9.4'
   package "libpq5" do
-    action :remove
-    version "9.3.5-1.pgdg12.4+1"
-    ignore_failure true
+    action :install
+    version node['ninefold_app']['libpq5']['version']['9.4']
   end
-  package "libpq5" do
-    version "9.4~rc1-1.pgdg12.4+1"
-  end
+
   package "libpq-dev" do
-    version "9.4~rc1-1.pgdg12.4+1"
+    action :install
+    version node['ninefold_app']['libpq5']['version']['9.4']
   end
 else
   p = package 'libpq-dev' do
